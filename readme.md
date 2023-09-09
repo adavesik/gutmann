@@ -1,4 +1,4 @@
-A minimal tool that shreds files using the Gutmann method
+A minimal tool that shreds files using the Gutmann method - https://en.wikipedia.org/wiki/Gutmann_method
 
 Example
 

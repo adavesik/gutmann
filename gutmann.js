@@ -79,7 +79,7 @@ class Gutmann {
             }
 
             // Init with patterns (gutmanns[9] is null)
-            for (let i = 0; i < fs.statSync(filePath).size;) {
+            for (let i = 0; i < 10;) {
                 (this.gutmanns)[4][i] = 0x55;
                 (this.gutmanns)[5][i] = 0xAA;
                 (this.gutmanns)[6][i] = 0x92;

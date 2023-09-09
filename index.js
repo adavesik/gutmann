@@ -36,6 +36,7 @@ const files = options.src;
 // Get the mode
 const eraseMode = options.file ? 'file' : options.dir ? 'dir' : undefined;
 
+//const targetPaths = ['PMRS.txt']; // Provide an array of file or directory paths
 const targetPaths = files; // Provide an array of file or directory paths
 const options1 = {
     file: true, // Set to true for file erasure, or false for directory erasure
