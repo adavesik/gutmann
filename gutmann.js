@@ -23,7 +23,7 @@ class Gutmann {
                 // Erase a file
                 await this.eraseFiles(this.targetPath);
             } else if (this.options.dir) {
-                // Erase a directory
+                // TODO Erase a directory
                 await this.eraseDirectory(this.targetPath);
             } else {
                 throw new Error('Invalid options. Please specify either "file" or "dir" in command line.');
