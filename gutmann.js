@@ -1,12 +1,12 @@
 // gutmann.js
-const fs = require('fs');
+const fs     = require('fs');
 const crypto = require('crypto');
-const util = require('util');
+const util   = require('util');
 
-const open = util.promisify(fs.open);
-const close = util.promisify(fs.close);
-const read = util.promisify(fs.read);
-const write = util.promisify(fs.write);
+const open      = util.promisify(fs.open);
+const close     = util.promisify(fs.close);
+const read      = util.promisify(fs.read);
+const write     = util.promisify(fs.write);
 const fdatasync = util.promisify(fs.fdatasync);
 
 class Gutmann {
@@ -26,7 +26,7 @@ class Gutmann {
                 // Erase a directory
                 await this.eraseDirectory(this.targetPath);
             } else {
-                throw new Error('Invalid options. Please specify either "file" or "dir".');
+                throw new Error('Invalid options. Please specify either "file" or "dir" in command line.');
             }
 
             console.log('Gutmann algorithm completed successfully.');
@@ -43,10 +43,13 @@ class Gutmann {
 
     async eraseDirectories(dirPaths) {
         for (const dirPath of dirPaths) {
-            // Implement directory erasure logic here for each dirPath...
+            // TODO Implement directory erasure
         }
     }
 
+    /**
+     * @param {number} fd
+     */
     fileSize = async (fd) => {
         const promisifiedFstat = util.promisify(fs.fstat);
         const stats = await promisifiedFstat(fd);
