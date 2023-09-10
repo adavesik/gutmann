@@ -38,12 +38,32 @@ const eraseMode = options.file ? 'file' : options.dir ? 'dir' : undefined;
 
 //const targetPaths = ['PMRS.txt']; // Provide an array of file or directory paths
 const targetPaths = files; // Provide an array of file or directory paths
+var corruptOptions = {};
+
+if (eraseMode === 'file')
+{
+    corruptOptions = {
+        file: true, // Set to true for file erase, or false for directory erase
+        dir: false, // Set to true for directory erase, or false for file erase
+    };
+}
+
+else{
+    if (eraseMode === 'dir')
+    {
+        corruptOptions = {
+            file: false, // Set to true for file erase, or false for directory erase
+            dir: true, // Set to true for directory erase, or false for file erase
+        };
+    }
+}
+
 const options1 = {
     file: true, // Set to true for file erase, or false for directory erase
     dir: false, // Set to true for directory erase, or false for file erase
 };
 
-const gutmann = new Gutmann(targetPaths, options1, 35);
+const gutmann = new Gutmann(targetPaths, corruptOptions, 35);
 
 gutmann.run().then(() => {
     // Code to run after gutmann.run() completes
