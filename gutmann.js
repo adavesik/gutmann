@@ -66,11 +66,13 @@ class Gutmann {
                             results.push(entryPath); // Add files to the results array
                             // Run Gutmann on the file concurrently
                             console.log(entryPath);
-                            await this.eraseFile(entryPath)
-                                .then(() => console.log(`Erasure completed on ${entryPath}`))
-                                .catch((error) => {
-                                console.error(`Error running Gutmann on ${entryPath}: ${error.message}`);
-                            });
+                            while (results.length > 0) {
+                                await this.eraseFile(results.pop())
+                                    .then(() => console.log(`Erasure completed on ${entryPath}`))
+                                    .catch((error) => {
+                                        console.error(`Error running Gutmann on ${entryPath}: ${error.message}`);
+                                    });
+                            }
                         }
                     }
                 }
