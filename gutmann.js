@@ -2,12 +2,17 @@
 const fs     = require('fs');
 const crypto = require('crypto');
 const util   = require('util');
+const path = require('path');
 
 const open      = util.promisify(fs.open);
 const close     = util.promisify(fs.close);
 const read      = util.promisify(fs.read);
 const write     = util.promisify(fs.write);
 const fdatasync = util.promisify(fs.fdatasync);
+const readdir   = util.promisify(fs.readdir);
+const lstat     = util.promisify(fs.lstat);
+const stat      = util.promisify(fs.stat);
+const unlink    = util.promisify(fs.unlink);
 
 class Gutmann {
     constructor(targetPath, options, passes) {
@@ -24,7 +29,7 @@ class Gutmann {
                 await this.eraseFiles(this.targetPath);
             } else if (this.options.dir) {
                 // TODO Erase a directory
-                await this.eraseDirectory(this.targetPath);
+                await this.eraseDirectories(this.targetPath);
             } else {
                 throw new Error('Invalid options. Please specify either "file" or "dir" in command line.');
             }
@@ -43,7 +48,36 @@ class Gutmann {
 
     async eraseDirectories(dirPaths) {
         for (const dirPath of dirPaths) {
-            // TODO Implement directory erasure
+            try {
+                const stack = [dirPath];
+                const results = [];
+
+                while (stack.length > 0) {
+                    const currentPath = stack.pop();
+                    const entries = await readdir(currentPath);
+
+                    for (const entry of entries) {
+                        const entryPath = path.join(currentPath, entry);
+                        const stats = await stat(entryPath);
+
+                        if (stats.isDirectory()) {
+                            stack.push(entryPath); // Add directories to the stack for further processing
+                        } else {
+                            results.push(entryPath); // Add files to the results array
+                            // Run Gutmann on the file concurrently
+                            console.log(entryPath);
+                            await this.eraseFile(entryPath)
+                                .then(() => console.log(`Erasure completed on ${entryPath}`))
+                                .catch((error) => {
+                                console.error(`Error running Gutmann on ${entryPath}: ${error.message}`);
+                            });
+                        }
+                    }
+                }
+                
+            } catch (e) {
+                console.error(`Error processing directory: ${dirPath}`, e);
+            }
         }
     }
 
@@ -169,7 +203,7 @@ class Gutmann {
                 await write(fd, this.gutmanns[i], 0, this.gutmanns[i].length, 0);
                 await fdatasync(fd); // Flush()
             }
-            await close(fd);
+            await unlink(filePath);
 
         } catch (error) {
             console.error('Error erasing file:', error.message);
