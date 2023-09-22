@@ -56,6 +56,11 @@ class Gutmann {
                     const currentPath = stack.pop();
                     const entries = await readdir(currentPath);
 
+                    if (entries.length === 0) {
+                        console.log('Directory is empty.');
+                        return;
+                    }
+
                     for (const entry of entries) {
                         const entryPath = path.join(currentPath, entry);
                         const stats = await stat(entryPath);
